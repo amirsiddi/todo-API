@@ -18,15 +18,11 @@ app.get('/todos', function(req, res){
 	res.json(todos);
 });
 
+// GET /todos/:id
 app.get('/todos/:id', function(req, res){
 	var todoId = parseInt(req.params.id, 10);
 	var matchedTodo = _.findWhere(todos, {id: todoId});
-	// var matchedTodo;
-	// todos.forEach( function(todo) {
-	// 	if (todoId === todo.id){
-	// 		matchedTodo = todo;
-	// 	}		
-	// });
+
 	if (matchedTodo != undefined){
 		res.json(matchedTodo);
 	} else {
@@ -34,6 +30,7 @@ app.get('/todos/:id', function(req, res){
 	}	
 });
 
+// POST /todos
 app.post('/todos', function (req, res){
 	var body = req.body;
 	body = _.pick(body, 'description', 'completed');
@@ -48,7 +45,18 @@ app.post('/todos', function (req, res){
 	res.json(body);
 });
 
-// POST /todos
+// DELETE /todos/:id
+app.delete('/todos/:id', function(req, res){
+	var todoId = parseInt(req.params.id, 10);
+	var matchedTodo = _.findWhere(todos, {id: todoId});
+
+	if (matchedTodo != undefined){
+		res.json(matchedTodo);
+		todos = _.without(todos, matchedTodo);
+	} else {
+		res.status(404).send();
+	}	
+});
 
 app.listen(PORT, function(){
 	console.log('Express listening to port ' + PORT + '!');
